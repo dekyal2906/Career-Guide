@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CareerGuide - Find Your Path</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --lav:#EEF0FF;--lav-mid:#C7CCFF;--lav-deep:#5A63D8;
+  --mint:#E6F7F2;--mint-mid:#7DCFB6;--mint-deep:#1D7A61;
+  --peach:#FFF0EB;--peach-mid:#F5C4B3;--peach-deep:#C05030;
+  --sky:#EAF4FF;--sky-mid:#90C8F5;--sky-deep:#1A6FAD;
+  --rose:#FFF0F5;--rose-mid:#F5C0D5;--rose-deep:#B03065;
+  --amber:#FFF8EC;--amber-mid:#F9D48B;--amber-deep:#9A6800;
+  --slate:#F4F5F8;--slate-txt:#3A3D52;--muted:#7B7F9A;
+  --border:#E0E2EE;--white:#ffffff;--body-bg:#F7F8FC;--dark:#1C1E2E;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--body-bg);color:var(--dark);min-height:100vh}
+.header{background:var(--white);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--lav-deep),var(--mint-deep));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600}
+.logo-name{font-family:'DM Serif Display',serif;font-size:18px;color:var(--slate-txt);letter-spacing:-0.3px}
+.steps{display:flex;align-items:center;gap:6px}
+.step-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;background:var(--border);color:var(--muted);transition:all 0.3s}
+.step-dot.active{background:var(--lav-deep);color:#fff;width:28px;height:28px}
+.step-dot.done{background:var(--mint-deep);color:#fff}
+.step-line{width:28px;height:2px;background:var(--border);border-radius:2px;transition:all 0.3s}
+.step-line.done{background:var(--mint-deep)}
+.page{display:none}.page.active{display:block}
+/* PAGE 1 */
+.p1-wrap{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:3rem 1.5rem}
+.p1-inner{display:flex;gap:48px;align-items:center;width:100%;max-width:900px}
+.p1-left{flex:1;display:flex;flex-direction:column;gap:24px}
+.eyebrow{font-size:12px;font-weight:500;color:var(--lav-deep);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.hero-h1{font-family:'DM Serif Display',serif;font-size:38px;line-height:1.15;letter-spacing:-0.5px}
+.hero-h1 em{color:var(--lav-deep);font-style:italic}
+.hero-sub{font-size:15px;color:var(--muted);line-height:1.7;max-width:320px}
+.stat-chips{display:flex;gap:10px}
+.chip{flex:1;border-radius:12px;padding:10px 12px;text-align:center;font-size:12px;font-weight:500;color:var(--slate-txt)}
+.form-card{width:360px;background:var(--white);border-radius:20px;box-shadow:0 4px 40px rgba(90,99,216,0.1);padding:32px 28px;flex-shrink:0}
+.form-card h2{font-size:20px;font-weight:500;margin-bottom:4px}
+.form-card p.sub{font-size:13px;color:var(--muted);margin-bottom:24px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* INPUTS */
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:5px;letter-spacing:0.02em}
+.field input,.field select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;color:var(--slate-txt);background:var(--white);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s;appearance:none;-webkit-appearance:none}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237B7F9A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.field input:focus,.field select:focus{border-color:var(--lav-deep)}
+.err{font-size:11px;color:var(--peach-deep);margin-top:4px;display:none}
+.err.show{display:block}
+/* BUTTONS */
+.btn-primary{width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--lav-deep),#7B63D8);color:#fff;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.92}
+.btn-ghost{padding:10px 18px;border-radius:10px;border:1.5px solid var(--border);background:var(--white);color:var(--slate-txt);font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;width:100%;margin-top:10px}
+.btn-ghost:hover{background:var(--slate)}
+.tos{font-size:12px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.6}
+.tos a{color:var(--lav-deep);text-decoration:none}
+/* PAGE 2 */
+.p2-wrap{max-width:780px;margin:0 auto;padding:3rem 1.5rem}
+.section-card{border-radius:16px;padding:20px 22px;margin-bottom:20px;border:1.5px solid transparent}
+.section-card h3{font-size:14px;font-weight:500;color:var(--slate-txt);margin-bottom:16px;letter-spacing:0.01em}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{padding:7px 14px;border-radius:20px;font-size:13px;border:1.5px solid var(--border);background:var(--white);color:var(--slate-txt);cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+.scope-row{display:flex;gap:10px}
+.scope-btn{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--white);color:var(--slate-txt);font-size:13px;font-weight:400;cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+.salary-label{font-size:13px;font-weight:500;color:var(--slate-txt);margin-bottom:8px}
+input[type=range]{width:100%;accent-color:var(--sky-deep)}
+.range-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+/* PAGE 3 */
+.p3-wrap{max-width:1000px;margin:0 auto;padding:3rem 1.5rem}
+.p3-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:28px}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.filter-btn{padding:8px 18px;border-radius:20px;font-size:13px;border:1.5px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+.filter-btn.active{border-color:var(--lav-deep);background:var(--lav);color:var(--lav-deep);font-weight:500}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
+.career-card{background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:22px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.career-card:hover{border-color:#C7CCFF}
+.card-top-bar{position:absolute;top:0;left:0;right:0;height:4px;border-radius:18px 18px 0 0}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;margin-top:4px}
+.field-badge{border-radius:8px;padding:4px 10px;font-size:11px;font-weight:500}
+.match-num{font-size:22px;font-weight:600;line-height:1}
+.match-lbl{font-size:10px;color:var(--muted)}
+.card-title{font-size:17px;font-weight:500;margin-bottom:8px;letter-spacing:-0.2px}
+.card-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.card-meta{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:13px;font-weight:500;color:var(--slate-txt)}
+.card-loc{display:flex;align-items:center;gap:6px;margin-bottom:14px;font-size:12px;color:var(--muted)}
+.skill-tags{display:flex;gap:6px;flex-wrap:wrap}
+.skill-tag{font-size:11px;padding:3px 9px;border-radius:12px}
+.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.growth-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:500}
+.detail-panel{display:none;background:var(--white);border-top:2px solid var(--lav-deep);padding:28px 2rem;margin-top:32px;border-radius:16px}
+.detail-panel.show{display:block}
+.detail-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.detail-header h2{font-size:22px;font-weight:500;margin-bottom:4px}
+.detail-header p{font-size:13px;color:var(--muted)}
+.close-btn{background:none;border:none;font-size:24px;color:var(--muted);cursor:pointer;line-height:1}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.detail-stat{background:var(--slate);border-radius:12px;padding:14px 16px}
+.detail-stat p.lbl{font-size:12px;color:var(--muted);margin-bottom:4px}
+.detail-stat p.val{font-size:14px;font-weight:500;color:var(--slate-txt)}
+.detail-desc{font-size:14px;color:var(--muted);line-height:1.7}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(247,248,252,0.92);z-index:300;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.loading-overlay.show{display:flex}
+.spinner{width:44px;height:44px;border-radius:50%;border:3px solid var(--lav-mid);border-top-color:var(--lav-deep);animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:15px;color:var(--slate-txt);font-weight:500}
+.empty{text-align:center;padding:3rem;color:var(--muted);font-size:15px}
+@media(max-width:700px){.p1-inner{flex-direction:column}.p1-left{display:none}.form-card{width:100%}.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">CG</div>
+    <span class="logo-name">CareerGuide</span>
+  </div>
+  <div class="steps">
+    <div class="step-dot active" id="dot1">1</div>
+    <div class="step-line" id="line1"></div>
+    <div class="step-dot" id="dot2">2</div>
+    <div class="step-line" id="line2"></div>
+    <div class="step-dot" id="dot3">3</div>
+  </div>
+</header>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p class="loading-text">Matching careers to your profile...</p>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page active" id="page1">
+  <div class="p1-wrap">
+    <div class="p1-inner">
+      <div class="p1-left">
+        <div>
+          <p class="eyebrow">Your Career, Guided</p>
+          <h1 class="hero-h1">Discover the right<br><em>path for you</em></h1>
+        </div>
+        <p class="hero-sub">Personalised career suggestions based on your interests, skills, and goals.</p>
+        <div class="stat-chips">
+          <div class="chip" style="background:var(--lav);border:1.5px solid var(--lav-mid)">800+ Career paths</div>
+          <div class="chip" style="background:var(--mint);border:1.5px solid var(--mint-mid)">190+ Countries</div>
+          <div class="chip" style="background:var(--peach);border:1.5px solid var(--peach-mid)">Smart matching</div>
+        </div>
+      </div>
+      <div class="form-card">
+        <h2>Create your account</h2>
+        <p class="sub">Get started in under 2 minutes</p>
+        <div class="row2">
+          <div class="field">
+            <label>First Name</label>
+            <input type="text" id="firstName" placeholder="Aryan" />
+            <p class="err" id="errFirst">First name is required</p>
+          </div>
+          <div class="field">
+            <label>Last Name</label>
+            <input type="text" id="lastName" placeholder="Kumar" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="you@example.com" />
+          <p class="err" id="errEmail">Enter a valid email</p>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="At least 6 characters" />
+          <p class="err" id="errPass">Minimum 6 characters</p>
+        </div>
+        <div class="field">
+          <label>Country</label>
+          <select id="country">
+            <option value="">Select your country</option>
+            <option>India</option><option>United States</option><option>United Kingdom</option>
+            <option>Canada</option><option>Australia</option><option>Germany</option>
+            <option>France</option><option>Singapore</option><option>UAE</option>
+            <option>Japan</option><option>Other</option>
+          </select>
+          <p class="err" id="errCountry">Please select a country</p>
+        </div>
+        <button class="btn-primary" id="btn1">Continue</button>
+        <p class="tos">By continuing you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+  <div class="p2-wrap">
+    <div style="margin-bottom:32px">
+      <p class="eyebrow">Step 2 of 3</p>
+      <h1 style="font-family:'DM Serif Display',serif;font-size:30px;letter-spacing:-0.4px;margin-bottom:8px">
+        Tell us about yourself, <em id="greetName" style="color:var(--lav-deep)"></em>
+      </h1>
+      <p style="font-size:14px;color:var(--muted);line-height:1.6">The more you share, the more tailored your career suggestions will be.</p>
+    </div>
+
+    <div class="section-card" style="background:var(--lav);border-color:var(--lav-mid)">
+      <h3>Education Background</h3>
+      <div class="row2">
+        <div class="field">
+          <label>Highest Education</label>
+          <select id="education">
+            <option value="">Select level</option>
+            <option>High School</option><option>Diploma</option>
+            <option>Bachelor's Degree</option><option>Master's Degree</option>
+            <option>PhD / Doctorate</option><option>Professional Certification</option>
+            <option>Self-taught</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Field of Study (optional)</label>
+          <input type="text" id="fieldStudy" placeholder="e.g. Computer Science" />
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" style="background:var(--mint);border-color:var(--mint-mid)">
+      <h3>Work Experience</h3>
+      <div class="row2">
+        <div class="field">
+          <label>Experience Level</label>
+          <select id="experience">
+            <option value="">Select</option>
+            <option>No experience (Student/Fresher)</option>
+            <option>0-2 years</option><option>2-5 years</option>
+            <option>5-10 years</option><option>10+ years</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Key Skills (comma-separated)</label>
+          <input type="text" id="skills" placeholder="e.g. Python, design, communication" />
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" style="background:var(--peach);border-color:var(--peach-mid)">
+      <h3>Interests and Passion</h3>
+      <div class="field">
+        <label>Areas of Interest <span style="font-weight:400;color:var(--muted)">(select all that apply)</span></label>
+        <div class="pills" id="interestPills"></div>
+      </div>
+    </div>
+
+    <div class="section-card" style="background:var(--sky);border-color:var(--sky-mid)">
+      <h3>Career Preferences</h3>
+      <div class="row2">
+        <div class="field">
+          <label>Career Scope</label>
+          <div class="scope-row">
+            <button class="scope-btn" id="scopeWorld" onclick="setScope('worldwide')">Worldwide</button>
+            <button class="scope-btn" id="scopeLocal" onclick="setScope('local')">Within Country</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Preferred Language</label>
+          <select id="language">
+            <option value="">Any language</option>
+            <option>English</option><option>Hindi</option><option>Tamil</option>
+            <option>French</option><option>Spanish</option><option>German</option>
+            <option>Arabic</option><option>Mandarin</option><option>Japanese</option>
+            <option>Portuguese</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <p class="salary-label" id="salaryLabel">Expected Salary: $50,000 / year</p>
+        <input type="range" id="salaryRange" min="10000" max="300000" step="5000" value="50000" />
+        <div class="range-ends"><span>$10K</span><span>$300K</span></div>
+      </div>
+    </div>
+
+    <div class="section-card" style="background:var(--rose);border-color:var(--rose-mid)">
+      <h3>Work Style and Personality</h3>
+      <div class="field">
+        <label>Preferred Work Style <span style="font-weight:400;color:var(--muted)">(select all that apply)</span></label>
+        <div class="pills" id="stylePills"></div>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>Your Personality Type <span style="font-weight:400;color:var(--muted)">(select all that apply)</span></label>
+        <div class="pills" id="personalityPills"></div>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn2">Find My Career Paths</button>
+    <button class="btn-ghost" onclick="goToPage(1)">Back</button>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="page3">
+  <div class="p3-wrap">
+    <div class="p3-top">
+      <div>
+        <p class="eyebrow" style="color:var(--mint-deep)">Your personalised results</p>
+        <h1 style="font-family:'DM Serif Display',serif;font-size:30px;letter-spacing:-0.4px;margin-bottom:8px" id="resultTitle">Career paths found for you</h1>
+        <p style="font-size:14px;color:var(--muted)" id="resultSub"></p>
+      </div>
+      <button class="btn-ghost" style="width:auto;margin:0" onclick="resetAll()">Start Over</button>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="setFilter('all',this)">All Paths</button>
+      <button class="filter-btn" onclick="setFilter('High',this)">High Growth</button>
+      <button class="filter-btn" onclick="setFilter('Medium',this)">Medium Growth</button>
+      <button class="filter-btn" onclick="setFilter('Stable',this)">Stable</button>
+    </div>
+    <div class="cards-grid" id="cardsGrid"></div>
+    <div class="detail-panel" id="detailPanel">
+      <div class="detail-header">
+        <div><h2 id="dTitle"></h2><p id="dSub"></p></div>
+        <button class="close-btn" onclick="closeDetail()">x</button>
+      </div>
+      <div class="detail-grid" id="dGrid"></div>
+      <p class="detail-desc" id="dDesc"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+var state = {
+  user: {},
+  profile: {},
+  careers: [],
+  selectedInterests: [],
+  selectedStyles: [],
+  selectedPersonalities: [],
+  scope: 'worldwide',
+  currentFilter: 'all'
+};
+
+var colorMap = {
+  lavender: { bg:'#EEF0FF', border:'#C7CCFF', text:'#5A63D8', deep:'#3D46B5' },
+  mint:     { bg:'#E6F7F2', border:'#7DCFB6', text:'#1D7A61', deep:'#115E47' },
+  peach:    { bg:'#FFF0EB', border:'#F5C4B3', text:'#C05030', deep:'#9A3E22' },
+  sky:      { bg:'#EAF4FF', border:'#90C8F5', text:'#1A6FAD', deep:'#0F5485' },
+  rose:     { bg:'#FFF0F5', border:'#F5C0D5', text:'#B03065', deep:'#8A234F' },
+  amber:    { bg:'#FFF8EC', border:'#F9D48B', text:'#9A6800', deep:'#7A5000' }
+};
+
+var INTERESTS = ['Technology','Healthcare','Finance','Education','Arts & Design','Engineering','Law','Business','Science & Research','Environment','Media & Journalism','Social Work','Hospitality','Retail & Commerce'];
+var STYLES = ['Remote','On-site','Hybrid','Flexible / Freelance','Travel-heavy'];
+var PERSONALITIES = ['Analytical & detail-oriented','Creative & imaginative','Leadership & management','Social & collaborative','Independent & self-driven','Structured & methodical'];
+
+var DB = [
+  {title:'Software Developer',field:'Technology',interest:'Technology',growth:'High',color:'lavender',sMin:70000,sMax:150000,edu:"Bachelor's Degree",fk:['computer science', 'cse', 'it', 'information technology', 'software', 'programming'],skills:['Programming','Problem Solving','System Design'],wLoc:'San Francisco, Bangalore, Berlin',iLoc:'Bangalore, Hyderabad, Pune',desc:'Design and build software applications used by millions. A great fit if you enjoy logical thinking and creating solutions from scratch.',styles:['Remote','Hybrid','On-site'],pers:['Analytical & detail-oriented','Independent & self-driven','Structured & methodical']},
+  {title:'Data Scientist',field:'Technology',interest:'Technology',growth:'High',color:'lavender',sMin:80000,sMax:160000,edu:"Bachelor's Degree",fk:['computer science', 'cse', 'statistics', 'math', 'data science', 'it'],skills:['Python','Statistics','Machine Learning'],wLoc:'New York, London, Singapore',iLoc:'Bangalore, Mumbai, Chennai',desc:'Extract insights from large datasets to drive business decisions. Ideal for those who enjoy math, patterns, and storytelling with data.',styles:['Remote','Hybrid','On-site'],pers:['Analytical & detail-oriented','Structured & methodical']},
+  {title:'UX Designer',field:'Technology',interest:'Technology',growth:'High',color:'peach',sMin:65000,sMax:130000,edu:'Diploma',fk:['design', 'hci', 'arts', 'computer science'],skills:['Figma','User Research','Prototyping'],wLoc:'London, New York, Amsterdam',iLoc:'Bangalore, Mumbai, Delhi',desc:'Create beautiful and intuitive digital experiences. Perfect for creative minds who love understanding human behaviour and designing elegant solutions.',styles:['Remote','Hybrid','Flexible / Freelance'],pers:['Creative & imaginative','Social & collaborative']},
+  {title:'Cybersecurity Analyst',field:'Technology',interest:'Technology',growth:'High',color:'lavender',sMin:75000,sMax:145000,edu:"Bachelor's Degree",fk:['computer science', 'cse', 'it', 'networking', 'information technology'],skills:['Network Security','Ethical Hacking','Risk Analysis'],wLoc:'Washington DC, London, Dubai',iLoc:'Bangalore, Delhi, Hyderabad',desc:'Protect organisations from digital threats and data breaches. Best suited for detail-oriented problem solvers who enjoy staying one step ahead.',styles:['On-site','Hybrid'],pers:['Analytical & detail-oriented','Structured & methodical']},
+  {title:'Cloud Architect',field:'Technology',interest:'Technology',growth:'High',color:'sky',sMin:100000,sMax:200000,edu:"Bachelor's Degree",fk:['computer science', 'cse', 'it', 'information technology'],skills:['AWS','DevOps','System Architecture'],wLoc:'Seattle, Dublin, Singapore',iLoc:'Bangalore, Hyderabad, Pune',desc:'Design and manage scalable cloud infrastructure for large enterprises. Ideal for experienced engineers who enjoy high-level system thinking.',styles:['Remote','Hybrid'],pers:['Analytical & detail-oriented','Independent & self-driven']},
+  {title:'AI Engineer',field:'Technology',interest:'Technology',growth:'High',color:'lavender',sMin:90000,sMax:180000,edu:"Master's Degree",fk:['computer science', 'cse', 'ai', 'machine learning', 'math'],skills:['Deep Learning','TensorFlow','Statistics'],wLoc:'San Francisco, London, Toronto',iLoc:'Bangalore, Hyderabad, IIT Cities',desc:'Build intelligent systems that learn and adapt over time. Perfect for those passionate about the future of artificial intelligence and automation.',styles:['Remote','Hybrid','On-site'],pers:['Analytical & detail-oriented','Structured & methodical']},
+  {title:'Clinical Doctor',field:'Healthcare',interest:'Healthcare',growth:'Stable',color:'mint',sMin:60000,sMax:200000,edu:"Bachelor's Degree",fk:['mbbs', 'medicine', 'biology', 'medical'],skills:['Medical Knowledge','Patient Care','Diagnosis'],wLoc:'United States, Germany, Australia',iLoc:'Mumbai, Delhi, Chennai',desc:'Diagnose and treat patients across a wide range of medical conditions. A deeply rewarding path for those driven by empathy and scientific curiosity.',styles:['On-site'],pers:['Social & collaborative','Analytical & detail-oriented']},
+  {title:'Pharmacist',field:'Healthcare',interest:'Healthcare',growth:'Stable',color:'mint',sMin:50000,sMax:120000,edu:"Bachelor's Degree",fk:['pharmacy', 'pharmacology', 'chemistry'],skills:['Pharmacology','Patient Counselling','Drug Safety'],wLoc:'USA, Canada, UK',iLoc:'Across India',desc:'Dispense medications and advise patients on safe drug use. Great for science-minded individuals who prefer a structured clinical environment.',styles:['On-site'],pers:['Structured & methodical','Social & collaborative']},
+  {title:'Healthcare Data Analyst',field:'Healthcare',interest:'Healthcare',growth:'High',color:'mint',sMin:55000,sMax:110000,edu:"Bachelor's Degree",fk:['biology', 'health', 'statistics', 'computer science', 'public health'],skills:['Health Informatics','SQL','Data Visualisation'],wLoc:'USA, UK, Canada',iLoc:'Bangalore, Mumbai, Delhi',desc:'Analyse medical records and patient data to improve hospital outcomes. Perfect for those bridging the gap between technology and healthcare.',styles:['Remote','Hybrid'],pers:['Analytical & detail-oriented','Independent & self-driven']},
+  {title:'Mental Health Counsellor',field:'Healthcare',interest:'Healthcare',growth:'High',color:'rose',sMin:40000,sMax:90000,edu:"Master's Degree",fk:['psychology', 'counselling', 'social science'],skills:['Empathy','CBT Techniques','Active Listening'],wLoc:'USA, UK, Australia',iLoc:'Delhi, Mumbai, Bangalore',desc:'Support individuals through emotional and psychological challenges. Best for compassionate personalities who genuinely enjoy helping others heal.',styles:['On-site','Hybrid','Remote'],pers:['Social & collaborative','Creative & imaginative']},
+  {title:'Financial Analyst',field:'Finance',interest:'Finance',growth:'Medium',color:'sky',sMin:60000,sMax:130000,edu:"Bachelor's Degree",fk:['finance', 'commerce', 'economics', 'accounting', 'business'],skills:['Excel Modelling','Financial Reporting','Investment Analysis'],wLoc:'New York, London, Hong Kong',iLoc:'Mumbai, Delhi, Bangalore',desc:'Evaluate financial data to guide investment and business decisions. Great for number-lovers who enjoy strategic thinking and market trends.',styles:['On-site','Hybrid'],pers:['Analytical & detail-oriented','Structured & methodical']},
+  {title:'Chartered Accountant',field:'Finance',interest:'Finance',growth:'Stable',color:'sky',sMin:50000,sMax:120000,edu:'Professional Certification',fk:['accounting', 'commerce', 'finance'],skills:['Taxation','Auditing','Financial Reporting'],wLoc:'UK, India, Canada, Australia',iLoc:'Mumbai, Delhi, Chennai, Bangalore',desc:'Manage audits, tax filings, and financial compliance for organisations. A prestigious and stable career for detail-oriented professionals.',styles:['On-site','Hybrid'],pers:['Structured & methodical','Analytical & detail-oriented']},
+  {title:'Investment Banker',field:'Finance',interest:'Finance',growth:'Medium',color:'sky',sMin:100000,sMax:300000,edu:"Bachelor's Degree",fk:['finance', 'economics', 'commerce', 'business'],skills:['Valuation','Deal Structuring','Communication'],wLoc:'New York, London, Dubai',iLoc:'Mumbai, Delhi',desc:'Advise companies on mergers, acquisitions, and capital raising. Ideal for high-energy, ambitious individuals who thrive in fast-paced environments.',styles:['On-site'],pers:['Leadership & management','Analytical & detail-oriented']},
+  {title:'School Teacher',field:'Education',interest:'Education',growth:'Stable',color:'rose',sMin:30000,sMax:70000,edu:"Bachelor's Degree",fk:['education', 'arts', 'b.ed', 'humanities', 'science', 'mathematics', 'english', 'history', 'geography', 'social science'],skills:['Communication','Curriculum Design','Classroom Management'],wLoc:'USA, UK, Canada',iLoc:'Across India',desc:'Inspire and educate young minds across all subjects. Perfect for patient, empathetic individuals who find joy in nurturing the growth of others.',styles:['On-site'],pers:['Social & collaborative','Leadership & management']},
+  {title:'EdTech Content Creator',field:'Education',interest:'Education',growth:'High',color:'peach',sMin:35000,sMax:80000,edu:'Diploma',fk:['education', 'arts', 'communication', 'media'],skills:['Content Writing','Video Production','Instructional Design'],wLoc:'Remote Worldwide',iLoc:'Remote across India',desc:'Create engaging online learning content for platforms and EdTech startups. Great for educators who love creativity and digital storytelling.',styles:['Remote','Flexible / Freelance'],pers:['Creative & imaginative','Independent & self-driven']},
+  {title:'University Professor',field:'Education',interest:'Education',growth:'Stable',color:'rose',sMin:50000,sMax:130000,edu:'PhD / Doctorate',fk:['any phd field', 'research'],skills:['Research','Academic Writing','Teaching'],wLoc:'USA, UK, Germany, Australia',iLoc:'IITs, IIMs, Major Universities',desc:'Conduct research and teach at university level in your area of expertise. Best for intellectually driven individuals who love deep learning and debate.',styles:['On-site','Hybrid'],pers:['Analytical & detail-oriented','Independent & self-driven']},
+  {title:'Graphic Designer',field:'Arts & Design',interest:'Arts & Design',growth:'Medium',color:'peach',sMin:35000,sMax:90000,edu:'Diploma',fk:['design', 'fine arts', 'visual arts'],skills:['Adobe Suite','Typography','Brand Identity'],wLoc:'New York, London, Berlin',iLoc:'Mumbai, Bangalore, Delhi',desc:'Create visual identities, marketing materials, and digital assets for brands. Ideal for creative thinkers who communicate powerfully through visuals.',styles:['Remote','Hybrid','Flexible / Freelance'],pers:['Creative & imaginative','Independent & self-driven']},
+  {title:'Animator',field:'Arts & Design',interest:'Arts & Design',growth:'High',color:'peach',sMin:45000,sMax:110000,edu:'Diploma',fk:['design', 'animation', 'fine arts', 'multimedia'],skills:['After Effects','3D Modelling','Storyboarding'],wLoc:'Los Angeles, London, Toronto',iLoc:'Mumbai, Hyderabad, Bangalore',desc:'Bring ideas to life through animation for films, games, and digital media. Perfect for imaginative creatives who love blending art with technology.',styles:['Remote','Hybrid','Flexible / Freelance'],pers:['Creative & imaginative','Independent & self-driven']},
+  {title:'Fashion Designer',field:'Arts & Design',interest:'Arts & Design',growth:'Medium',color:'peach',sMin:30000,sMax:100000,edu:'Diploma',fk:['fashion design', 'textile', 'fine arts'],skills:['Sketching','Textile Knowledge','Trend Research'],wLoc:'Paris, Milan, New York',iLoc:'Mumbai, Delhi, Jaipur',desc:'Design clothing and accessories that reflect culture and creativity. A dream path for those with a keen eye for aesthetics and passion for fashion.',styles:['On-site','Flexible / Freelance'],pers:['Creative & imaginative','Social & collaborative']},
+  {title:'Mechanical Engineer',field:'Engineering',interest:'Engineering',growth:'Stable',color:'amber',sMin:55000,sMax:120000,edu:"Bachelor's Degree",fk:['mechanical', 'mech', 'mech engg', 'production engineering', 'industrial engineering'],skills:['CAD','Thermodynamics','Manufacturing'],wLoc:'Germany, USA, Japan',iLoc:'Pune, Chennai, Ahmedabad',desc:'Design and develop mechanical systems and machinery for various industries. Great for hands-on thinkers who enjoy building real-world solutions.',styles:['On-site','Hybrid'],pers:['Analytical & detail-oriented','Structured & methodical']},
+  {title:'Civil Engineer',field:'Engineering',interest:'Engineering',growth:'Stable',color:'amber',sMin:50000,sMax:110000,edu:"Bachelor's Degree",fk:['civil', 'civil engg', 'structural engineering', 'construction engineering'],skills:['Structural Design','AutoCAD','Project Management'],wLoc:'UAE, USA, Australia',iLoc:'Delhi, Mumbai, Bangalore, Chennai',desc:'Plan and construct infrastructure including roads, bridges, and buildings. Best for structured thinkers who want their work to shape the physical world.',styles:['On-site','Travel-heavy'],pers:['Structured & methodical','Leadership & management']},
+  {title:'Electrical Engineer',field:'Engineering',interest:'Engineering',growth:'Medium',color:'amber',sMin:60000,sMax:130000,edu:"Bachelor's Degree",fk:['electrical', 'eee', 'electronics', 'ece', 'electrical engineering', 'electronics and communication', 'power engineering'],skills:['Circuit Design','Power Systems','Embedded Systems'],wLoc:'USA, Germany, South Korea',iLoc:'Bangalore, Pune, Chennai',desc:'Design electrical systems for industries ranging from power generation to consumer electronics. Ideal for analytical minds who enjoy complex technical systems.',styles:['On-site','Hybrid'],pers:['Analytical & detail-oriented','Structured & methodical']},
+  {title:'Marketing Manager',field:'Business',interest:'Business',growth:'Medium',color:'sky',sMin:55000,sMax:120000,edu:"Bachelor's Degree",fk:['marketing', 'business', 'commerce', 'mba'],skills:['Digital Marketing','Brand Strategy','Analytics'],wLoc:'New York, London, Singapore',iLoc:'Mumbai, Bangalore, Delhi',desc:'Drive brand awareness and lead marketing campaigns across channels. Perfect for creative strategists who enjoy both data and storytelling.',styles:['Hybrid','Remote','On-site'],pers:['Creative & imaginative','Leadership & management','Social & collaborative']},
+  {title:'Entrepreneur',field:'Business',interest:'Business',growth:'High',color:'amber',sMin:20000,sMax:500000,edu:'High School',fk:['business', 'commerce', 'management', 'mba', 'marketing', 'economics', 'finance', 'engineering', 'technology', 'computer science', 'it'],skills:['Leadership','Product Thinking','Fundraising'],wLoc:'Silicon Valley, London, Bangalore',iLoc:'Bangalore, Mumbai, Delhi',desc:'Build your own company from the ground up. Best for bold, resilient self-starters who thrive in ambiguity and are driven by a vision.',styles:['Flexible / Freelance','Remote'],pers:['Leadership & management','Independent & self-driven','Creative & imaginative']},
+  {title:'HR Manager',field:'Business',interest:'Business',growth:'Stable',color:'rose',sMin:45000,sMax:100000,edu:"Bachelor's Degree",fk:['hr', 'human resources', 'psychology', 'business', 'mba'],skills:['Talent Acquisition','Employee Relations','Labour Law'],wLoc:'USA, UK, India',iLoc:'Across India',desc:'Manage talent, culture, and employee well-being within organisations. Great for empathetic leaders who enjoy building strong and motivated teams.',styles:['On-site','Hybrid'],pers:['Social & collaborative','Leadership & management']},
+  {title:'Corporate Lawyer',field:'Law',interest:'Law',growth:'Medium',color:'sky',sMin:80000,sMax:250000,edu:"Bachelor's Degree",fk:['law', 'llb'],skills:['Contract Law','Negotiation','Legal Research'],wLoc:'New York, London, Dubai',iLoc:'Mumbai, Delhi, Bangalore',desc:'Advise corporations on legal matters including mergers, contracts, and compliance. Ideal for sharp, persuasive thinkers who thrive in high-stakes environments.',styles:['On-site'],pers:['Analytical & detail-oriented','Leadership & management']},
+  {title:'Public Interest Lawyer',field:'Law',interest:'Law',growth:'Stable',color:'rose',sMin:40000,sMax:90000,edu:"Bachelor's Degree",fk:['law', 'llb', 'social science'],skills:['Litigation','Human Rights Law','Advocacy'],wLoc:'USA, UK, India',iLoc:'Delhi, Mumbai, Chennai',desc:'Fight for justice on behalf of communities and social causes. Best for passionate advocates who believe in using law as a force for good.',styles:['On-site','Hybrid'],pers:['Social & collaborative','Independent & self-driven']},
+  {title:'Research Scientist',field:'Science & Research',interest:'Science & Research',growth:'Medium',color:'lavender',sMin:55000,sMax:130000,edu:'PhD / Doctorate',fk:['science', 'physics', 'chemistry', 'biology', 'research'],skills:['Experimental Design','Academic Writing','Statistics'],wLoc:'USA, Germany, Switzerland',iLoc:'IITs, IISc, CSIR Labs',desc:'Conduct original research to advance human knowledge in your field. Perfect for curious, patient minds who love asking deep questions and finding answers.',styles:['On-site','Hybrid'],pers:['Analytical & detail-oriented','Independent & self-driven']},
+  {title:'Biotechnologist',field:'Science & Research',interest:'Science & Research',growth:'High',color:'mint',sMin:50000,sMax:120000,edu:"Master's Degree",fk:['biotechnology', 'biology', 'life sciences'],skills:['Genetic Engineering','Lab Techniques','Bioinformatics'],wLoc:'USA, Germany, UK',iLoc:'Hyderabad, Bangalore, Pune',desc:'Apply biological systems to develop medicines and industrial products. Great for scientists who want to solve real-world problems using biology.',styles:['On-site'],pers:['Analytical & detail-oriented','Structured & methodical']},
+  {title:'Environmental Consultant',field:'Environment',interest:'Environment',growth:'High',color:'mint',sMin:50000,sMax:100000,edu:"Bachelor's Degree",fk:['environmental science', 'environment', 'geography', 'civil'],skills:['Environmental Assessment','GIS','Policy Writing'],wLoc:'USA, Canada, Netherlands',iLoc:'Delhi, Mumbai, Bangalore',desc:'Help organisations minimise their environmental footprint through audits and policy advice. Ideal for those passionate about sustainability and climate action.',styles:['Hybrid','Travel-heavy','On-site'],pers:['Analytical & detail-oriented','Independent & self-driven']},
+  {title:'Renewable Energy Engineer',field:'Environment',interest:'Environment',growth:'High',color:'mint',sMin:60000,sMax:130000,edu:"Bachelor's Degree",fk:['electrical', 'eee', 'electronics', 'ece', 'mechanical', 'energy engineering', 'renewable energy'],skills:['Solar Systems','Grid Management','CAD Tools'],wLoc:'Germany, Denmark, USA',iLoc:'Rajasthan, Gujarat, Bangalore',desc:'Design and implement clean energy solutions like solar panels and wind farms. Best for engineers who want their work to positively impact the planet.',styles:['On-site','Travel-heavy','Hybrid'],pers:['Analytical & detail-oriented','Structured & methodical']},
+  {title:'Journalist',field:'Media & Journalism',interest:'Media & Journalism',growth:'Stable',color:'peach',sMin:30000,sMax:80000,edu:"Bachelor's Degree",fk:['journalism', 'mass communication', 'media', 'arts'],skills:['Investigative Research','Writing','Interviewing'],wLoc:'New York, London, Washington DC',iLoc:'Delhi, Mumbai, Bangalore',desc:'Investigate and report on stories that matter to the public. Perfect for curious truth-seekers who communicate with clarity and passion.',styles:['Hybrid','Travel-heavy','Remote'],pers:['Independent & self-driven','Social & collaborative']},
+  {title:'Content Strategist',field:'Media & Journalism',interest:'Media & Journalism',growth:'High',color:'peach',sMin:45000,sMax:100000,edu:'Diploma',fk:['media', 'communication', 'marketing', 'arts'],skills:['SEO','Copywriting','Content Planning'],wLoc:'Remote Worldwide',iLoc:'Remote across India',desc:'Plan and execute content strategies that grow brands online. Great for creative writers who enjoy both storytelling and data-driven decision making.',styles:['Remote','Flexible / Freelance','Hybrid'],pers:['Creative & imaginative','Independent & self-driven']},
+  {title:'Social Worker',field:'Social Work',interest:'Social Work',growth:'Stable',color:'rose',sMin:30000,sMax:65000,edu:"Bachelor's Degree",fk:['social work', 'sociology', 'psychology'],skills:['Case Management','Empathy','Crisis Intervention'],wLoc:'USA, UK, Canada',iLoc:'Across India - NGOs and Govt',desc:'Support vulnerable individuals and communities through advocacy and direct care. Deeply fulfilling for empathetic, resilient individuals driven by social change.',styles:['On-site','Travel-heavy'],pers:['Social & collaborative','Leadership & management']},
+  {title:'NGO Program Manager',field:'Social Work',interest:'Social Work',growth:'Medium',color:'rose',sMin:35000,sMax:75000,edu:"Bachelor's Degree",fk:['social work', 'development studies', 'management'],skills:['Project Management','Grant Writing','Community Engagement'],wLoc:'USA, Kenya, India',iLoc:'Delhi, Mumbai, Rural India',desc:'Lead development programs that create lasting impact for communities in need. Best for organised, mission-driven leaders who can balance heart and strategy.',styles:['Hybrid','Travel-heavy','On-site'],pers:['Leadership & management','Social & collaborative']},
+  {title:'Hotel Manager',field:'Hospitality',interest:'Hospitality',growth:'Medium',color:'amber',sMin:40000,sMax:100000,edu:'Diploma',fk:['hospitality', 'hotel management'],skills:['Operations Management','Guest Relations','Revenue Management'],wLoc:'Dubai, Maldives, Paris',iLoc:'Goa, Mumbai, Delhi, Rajasthan',desc:'Oversee all operations of a hotel to deliver exceptional guest experiences. Perfect for natural leaders who love service, people, and dynamic environments.',styles:['On-site'],pers:['Leadership & management','Social & collaborative']},
+  {title:'Chef',field:'Hospitality',interest:'Hospitality',growth:'Medium',color:'peach',sMin:30000,sMax:90000,edu:'Diploma',fk:['culinary arts', 'hotel management'],skills:['Culinary Techniques','Menu Design','Kitchen Management'],wLoc:'Paris, New York, Tokyo',iLoc:'Mumbai, Delhi, Bangalore, Goa',desc:'Create extraordinary dining experiences through food, flavour, and artistry. Ideal for creative and hardworking individuals who treat cooking as a craft.',styles:['On-site'],pers:['Creative & imaginative','Structured & methodical']},
+  {title:'E-commerce Manager',field:'Retail & Commerce',interest:'Retail & Commerce',growth:'High',color:'sky',sMin:45000,sMax:100000,edu:"Bachelor's Degree",fk:['business', 'marketing', 'commerce', 'it'],skills:['Digital Marketing','Inventory Management','Analytics'],wLoc:'Remote Worldwide',iLoc:'Bangalore, Mumbai, Delhi',desc:'Run and grow online stores across platforms like Amazon and Shopify. Great for business-minded individuals who love the fast pace of digital retail.',styles:['Remote','Hybrid'],pers:['Analytical & detail-oriented','Leadership & management']},
+  {title:'Retail Store Manager',field:'Retail & Commerce',interest:'Retail & Commerce',growth:'Stable',color:'amber',sMin:35000,sMax:75000,edu:'High School',fk:['business', 'commerce', 'retail management', 'marketing', 'management'],skills:['Team Leadership','Sales Strategy','Customer Service'],wLoc:'Across all countries',iLoc:'Across India',desc:'Manage day-to-day operations and drive sales performance in a retail store. Best for energetic, people-first leaders who thrive on the shop floor.',styles:['On-site'],pers:['Leadership & management','Social & collaborative']}
+];
+
+function matchCareers(profile) {
+  var userSalary = Number(profile.salary);
+  var userSkills = (profile.skills || '').toLowerCase();
+  var userField = (profile.fieldStudy || '').toLowerCase().trim();
+  var eduOrder = ['High School','Diploma',"Bachelor's Degree","Master's Degree",'PhD / Doctorate','Professional Certification','Self-taught'];
+
+  // Normalise userField: split into tokens for smarter matching
+  var userFieldTokens = userField ? userField.split(/[\s,\/\-&]+/).filter(function(t){ return t.length > 1; }) : [];
+
+  function fieldMatches(fkList) {
+    if (!userField) return false;
+    for (var i = 0; i < fkList.length; i++) {
+      var kw = fkList[i].toLowerCase();
+      // Direct containment both ways
+      if (userField.indexOf(kw) !== -1 || kw.indexOf(userField) !== -1) return true;
+      // Token-level match: any keyword token found in userField tokens
+      var kwTokens = kw.split(/[\s,\/\-&]+/);
+      for (var j = 0; j < kwTokens.length; j++) {
+        var t = kwTokens[j];
+        if (t.length > 2 && userFieldTokens.indexOf(t) !== -1) return true;
+      }
+    }
+    return false;
+  }
+
+  var results = DB.map(function(c) {
+    var score = 0;
+    var fieldHit = fieldMatches(c.fk);
+
+    // 1) FIELD OF STUDY — primary gate when provided
+    if (userField) {
+      if (fieldHit) {
+        score += 55; // strong bonus for field match
+      } else {
+        score -= 40; // hard penalty — field mismatch pushes career to the bottom
+      }
+    }
+
+    // 2) INTEREST — second strongest signal (one or more selected)
+    if (profile.interests && profile.interests.indexOf(c.interest) !== -1) score += 25;
+
+    // 3) SKILLS — keyword overlap with user's typed skills
+    var skillHits = 0;
+    c.skills.forEach(function(sk) {
+      var word = sk.toLowerCase().split('/')[0].trim().split(' ')[0];
+      if (userSkills.indexOf(word) !== -1) skillHits++;
+    });
+    score += skillHits * 8;
+
+    // 4) EDUCATION LEVEL — must roughly meet requirement
+    var uIdx = eduOrder.indexOf(profile.education);
+    var rIdx = eduOrder.indexOf(c.edu);
+    if (uIdx >= rIdx) score += 8;
+    else if (uIdx === rIdx - 1) score += 3;
+    else score -= 6;
+
+    // 5) WORK STYLE — tie-breaker
+    if (profile.workStyles) {
+      var styleHits = profile.workStyles.filter(function(s){ return c.styles.indexOf(s) !== -1; }).length;
+      score += styleHits * 4;
+    }
+
+    // 6) PERSONALITY — tie-breaker
+    if (profile.personalities) {
+      var persHits = profile.personalities.filter(function(p){ return c.pers.indexOf(p) !== -1; }).length;
+      score += persHits * 4;
+    }
+
+    // 7) SALARY — small bonus if expectation is realistic for this role
+    if (userSalary >= c.sMin && userSalary <= c.sMax) score += 6;
+    else if (userSalary >= c.sMin * 0.7) score += 2;
+
+    var pct = Math.min(99, Math.max(55, Math.round(55 + (score / 120) * 44)));
+    var loc = (profile.scope === 'local') ? c.iLoc : c.wLoc;
+    return {
+      title: c.title, field: c.field, growth: c.growth, color: c.color,
+      salaryMin: c.sMin, salaryMax: c.sMax, education: c.edu,
+      topSkills: c.skills, location: loc, description: c.desc, match: pct, _score: score
+    };
+  });
+
+  results.sort(function(a,b){ return b._score - a._score; });
+  return results.slice(0, 6);
+}
+
+function buildPills(id, items, colorKey, stateKey) {
+  var clr = colorMap[colorKey];
+  var container = document.getElementById(id);
+  container.innerHTML = '';
+  items.forEach(function(item) {
+    var btn = document.createElement('button');
+    btn.className = 'pill';
+    btn.textContent = item;
+    btn.onclick = function() {
+      var idx = state[stateKey].indexOf(item);
+      if (idx === -1) {
+        state[stateKey].push(item);
+        btn.style.background = clr.bg; btn.style.borderColor = clr.text;
+        btn.style.color = clr.text; btn.style.fontWeight = '500';
+      } else {
+        state[stateKey].splice(idx, 1);
+        btn.style.background = '#fff'; btn.style.borderColor = '#E0E2EE';
+        btn.style.color = '#3A3D52'; btn.style.fontWeight = '400';
+      }
+    };
+    container.appendChild(btn);
+  });
+}
+
+function init() {
+  buildPills('interestPills', INTERESTS, 'peach', 'selectedInterests');
+  buildPills('stylePills', STYLES, 'rose', 'selectedStyles');
+  buildPills('personalityPills', PERSONALITIES, 'rose', 'selectedPersonalities');
+  setScope('worldwide');
+}
+
+function goToPage(n) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('page' + n).classList.add('active');
+  for (var i = 1; i <= 3; i++) {
+    var dot = document.getElementById('dot' + i);
+    dot.className = 'step-dot';
+    if (i < n) { dot.classList.add('done'); dot.textContent = 'v'; }
+    else if (i === n) { dot.classList.add('active'); dot.textContent = i; }
+    else { dot.textContent = i; }
+  }
+  for (var j = 1; j <= 2; j++) {
+    document.getElementById('line' + j).className = 'step-line' + (j < n ? ' done' : '');
+  }
+  window.scrollTo(0, 0);
+}
+
+function setScope(val) {
+  state.scope = val;
+  var w = document.getElementById('scopeWorld');
+  var l = document.getElementById('scopeLocal');
+  if (val === 'worldwide') {
+    w.style.borderColor = '#1A6FAD'; w.style.background = '#EAF4FF'; w.style.color = '#1A6FAD'; w.style.fontWeight = '500';
+    l.style.borderColor = '#E0E2EE'; l.style.background = '#fff'; l.style.color = '#3A3D52'; l.style.fontWeight = '400';
+  } else {
+    l.style.borderColor = '#1A6FAD'; l.style.background = '#EAF4FF'; l.style.color = '#1A6FAD'; l.style.fontWeight = '500';
+    w.style.borderColor = '#E0E2EE'; w.style.background = '#fff'; w.style.color = '#3A3D52'; w.style.fontWeight = '400';
+  }
+}
+
+function updateSalary(val) {
+  document.getElementById('salaryLabel').textContent = 'Expected Salary: $' + Number(val).toLocaleString() + ' / year';
+}
+
+document.getElementById('salaryRange').addEventListener('input', function(){ updateSalary(this.value); });
+
+document.getElementById('btn1').addEventListener('click', function() {
+  var fn = document.getElementById('firstName').value.trim();
+  var em = document.getElementById('email').value.trim();
+  var pw = document.getElementById('password').value;
+  var co = document.getElementById('country').value;
+  var ok = true;
+  document.querySelectorAll('.err').forEach(function(e){ e.classList.remove('show'); });
+  if (!fn) { document.getElementById('errFirst').classList.add('show'); ok = false; }
+  if (em.indexOf('@') === -1) { document.getElementById('errEmail').classList.add('show'); ok = false; }
+  if (pw.length < 6) { document.getElementById('errPass').classList.add('show'); ok = false; }
+  if (!co) { document.getElementById('errCountry').classList.add('show'); ok = false; }
+  if (!ok) return;
+  state.user = { name: fn, email: em, country: co };
+  document.getElementById('greetName').textContent = fn;
+  goToPage(2);
+});
+
+document.getElementById('btn2').addEventListener('click', function() {
+  var edu = document.getElementById('education').value;
+  var exp = document.getElementById('experience').value;
+  if (!edu || !exp || state.selectedInterests.length === 0 || state.selectedStyles.length === 0) {
+    alert('Please fill in Education, Experience, at least one Interest, and at least one Work Style.');
+    return;
+  }
+  state.profile = {
+    education: edu,
+    fieldStudy: document.getElementById('fieldStudy').value,
+    experience: exp,
+    skills: document.getElementById('skills').value,
+    interests: state.selectedInterests,
+    scope: state.scope,
+    salary: document.getElementById('salaryRange').value,
+    workStyles: state.selectedStyles,
+    personalities: state.selectedPersonalities,
+    language: document.getElementById('language').value
+  };
+  document.getElementById('loadingOverlay').classList.add('show');
+  setTimeout(function() {
+    state.careers = matchCareers(state.profile);
+    document.getElementById('loadingOverlay').classList.remove('show');
+    renderResults();
+    goToPage(3);
+  }, 1200);
+});
+
+function renderResults() {
+  var sorted = state.careers.slice().sort(function(a,b){ return b.match - a.match; });
+  document.getElementById('resultTitle').textContent = sorted.length + ' career paths found for you';
+  document.getElementById('resultSub').textContent = 'Based on your profile  |  ' +
+    (state.profile.scope === 'worldwide' ? 'Worldwide opportunities' : 'Opportunities in ' + state.user.country) +
+    '  |  ' + state.profile.interest;
+  renderCards(sorted);
+}
+
+function renderCards(list) {
+  var grid = document.getElementById('cardsGrid');
+  grid.innerHTML = '';
+  if (!list.length) { grid.innerHTML = '<p class="empty">No careers match this filter.</p>'; return; }
+  list.forEach(function(career) {
+    var clr = colorMap[career.color] || colorMap.lavender;
+    var gBg = career.growth === 'High' ? '#E6F7F2' : career.growth === 'Medium' ? '#FFF8EC' : '#F4F5F8';
+    var gClr = career.growth === 'High' ? '#1D7A61' : career.growth === 'Medium' ? '#9A6800' : '#7B7F9A';
+    var card = document.createElement('div');
+    card.className = 'career-card';
+    card.innerHTML =
+      '<div class="card-top-bar" style="background:linear-gradient(90deg,' + clr.text + ',' + clr.border + ')"></div>' +
+      '<div class="card-header">' +
+        '<div class="field-badge" style="background:' + clr.bg + ';border:1px solid ' + clr.border + ';color:' + clr.text + '">' + career.field + '</div>' +
+        '<div style="text-align:right"><div class="match-num" style="color:' + clr.deep + '">' + career.match + '%</div><div class="match-lbl">match</div></div>' +
+      '</div>' +
+      '<div class="card-title">' + career.title + '</div>' +
+      '<div class="card-desc">' + career.description + '</div>' +
+      '<div class="card-meta"><span>&#x1F4B0;</span> $' + Number(career.salaryMin).toLocaleString() + ' - $' + Number(career.salaryMax).toLocaleString() + ' / yr</div>' +
+      '<div class="card-loc"><span>&#x1F4CD;</span> ' + career.location + '</div>' +
+      '<div class="skill-tags">' + (career.topSkills||[]).map(function(s){ return '<span class="skill-tag" style="background:' + clr.bg + ';color:' + clr.text + ';border:1px solid ' + clr.border + '">' + s + '</span>'; }).join('') + '</div>' +
+      '<div class="card-footer"><span class="growth-badge" style="background:' + gBg + ';color:' + gClr + '">' + career.growth + ' growth</span><span style="font-size:12px;color:' + clr.text + ';font-weight:500">View details</span></div>';
+    card.onclick = function(){ openDetail(career, clr, card); };
+    grid.appendChild(card);
+  });
+}
+
+function setFilter(val, btn) {
+  state.currentFilter = val;
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  var sorted = state.careers.slice().sort(function(a,b){ return b.match - a.match; });
+  var filtered = val === 'all' ? sorted : sorted.filter(function(c){ return c.growth === val; });
+  renderCards(filtered);
+  closeDetail();
+}
+
+function openDetail(career, clr, cardEl) {
+  document.querySelectorAll('.career-card').forEach(function(c){ c.style.borderColor = '#E0E2EE'; });
+  cardEl.style.borderColor = clr.text;
+  document.getElementById('dTitle').textContent = career.title;
+  document.getElementById('dSub').textContent = career.field + '  |  ' + career.education;
+  document.getElementById('detailPanel').style.borderTopColor = clr.text;
+  document.getElementById('dGrid').innerHTML = [
+    { label: 'Salary Range', value: '$' + Number(career.salaryMin).toLocaleString() + ' - $' + Number(career.salaryMax).toLocaleString() + ' / year' },
+    { label: 'Best Locations', value: career.location },
+    { label: 'Growth Outlook', value: career.growth + ' Growth' },
+    { label: 'Education Needed', value: career.education }
+  ].map(function(s){ return '<div class="detail-stat"><p class="lbl">' + s.label + '</p><p class="val">' + s.value + '</p></div>'; }).join('');
+  document.getElementById('dDesc').textContent = career.description;
+  document.getElementById('detailPanel').classList.add('show');
+  document.getElementById('detailPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeDetail() {
+  document.getElementById('detailPanel').classList.remove('show');
+  document.querySelectorAll('.career-card').forEach(function(c){ c.style.borderColor = '#E0E2EE'; });
+}
+
+function resetAll() {
+  state = { user:{}, profile:{}, careers:[], selectedInterests:[], selectedStyles:[], selectedPersonalities:[], scope:'worldwide', currentFilter:'all' };
+  ['firstName','lastName','email','password','fieldStudy','skills'].forEach(function(id){ document.getElementById(id).value = ''; });
+  ['country','education','experience','language'].forEach(function(id){ document.getElementById(id).value = ''; });
+  document.getElementById('salaryRange').value = 50000;
+  updateSalary(50000);
+  document.querySelectorAll('.err').forEach(function(e){ e.classList.remove('show'); });
+  init();
+  goToPage(1);
+}
+
+init();
+</script>
+</body>
+</html>
